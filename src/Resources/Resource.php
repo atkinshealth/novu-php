@@ -43,6 +43,7 @@ class Resource
     protected function fill()
     {
         foreach ($this->attributes as $key => $value) {
+            if ($key === '__v') continue;
             $key = $this->camelCase($key);
 
             $this->{$key} = $value;

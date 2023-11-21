@@ -98,13 +98,6 @@ class Workflow extends Resource
      */
     public $updatedAt;
 
-
-    /**
-     * @var string
-     */
-    public $v;
-
-
     /**
      * @var array
      */
