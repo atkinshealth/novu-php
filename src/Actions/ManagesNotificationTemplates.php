@@ -6,8 +6,9 @@ use Novu\SDK\Resources\NotificationTemplate;
 
 trait ManagesNotificationTemplates
 {
-   
+
     /**
+     * @deprecated Use workflows instead
      * Get Notification Templates
      *
      * @return \Novu\SDK\Resources\NotificationTemplate
@@ -20,6 +21,7 @@ trait ManagesNotificationTemplates
     }
 
     /**
+     * @deprecated Use workflows instead
      * Create notification template
      *
      * @return \Novu\SDK\Resources\NotificationTemplate
@@ -32,6 +34,7 @@ trait ManagesNotificationTemplates
     }
 
     /**
+     * @deprecated Use workflows instead
      * Get One Notification Template
      *
      * @param string $templateId
@@ -45,6 +48,7 @@ trait ManagesNotificationTemplates
     }
 
     /**
+     * @deprecated Use workflows instead
      * Update Notification Template
      *
      * @param string $templateId
@@ -59,6 +63,7 @@ trait ManagesNotificationTemplates
     }
 
     /**
+     * @deprecated Use workflows instead
      * Delete Notification Template
      *
      * @return \Novu\SDK\Resources\NotificationTemplate

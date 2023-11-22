@@ -2,6 +2,7 @@
 
 namespace Novu\SDK\Actions;
 
+use Novu\SDK\Resources\Paginated;
 use Novu\SDK\Resources\Workflow;
 
 trait ManagesWorkflow
@@ -9,13 +10,14 @@ trait ManagesWorkflow
     /**
      * Get Workflows.
      *
-     * @return \Novu\SDK\Resources\Workflow
+     * @return Paginated<Workflow>
      */
     public function getWorkflows(int $page = 1, int $limit = 10)
     {
-        $response = $this->get('workflows?' . http_build_query(['page' => $page, 'limit' => $limit]))['data'];
+        $response = $this->get('workflows?' . http_build_query(['page' => $page, 'limit' => $limit]));
 
-        return new Workflow($response, $this);
+        $response['data'] = array_map(fn ($value) => new Workflow($value, $this), $response['data']);
+        return new Paginated($response);
     }
 
     /**

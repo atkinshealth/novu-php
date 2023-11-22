@@ -2,6 +2,7 @@
 
 namespace Novu\SDK\Actions;
 
+use Novu\SDK\Resources\Paginated;
 use Novu\SDK\Resources\Tenant;
 
 trait ManagesTenants
@@ -50,7 +51,7 @@ trait ManagesTenants
     /**
      * Fetch list of tenant.
      *
-     * @return \Novu\SDK\Resources\Tenant
+     * @return Paginated<\Novu\SDK\Resources\Tenant>
      */
     public function getTenantList(array $queryParams = [])
     {
@@ -60,9 +61,9 @@ trait ManagesTenants
             $uri .= '?' . http_build_query($queryParams);
         }
 
-        $tenants = $this->get($uri);
-
-        return new Tenant($tenants, $this);
+        $response = $this->get($uri);
+        $response['data'] = array_map(fn ($value) => new Tenant($value, $this), $response['data']);
+        return new Paginated($response);
     }
 
     /**

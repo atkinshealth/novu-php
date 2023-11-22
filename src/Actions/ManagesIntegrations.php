@@ -6,17 +6,17 @@ use Novu\SDK\Resources\Integration;
 
 trait ManagesIntegrations
 {
-   
+
     /**
      * Get Integrations
      *
-     * @return \Novu\SDK\Resources\Integration
+     * @return \Novu\SDK\Resources\Integration[]
      */
     public function getIntegrations()
     {
         $integrations = $this->get("integrations")['data'];
 
-        return new Integration($integrations, $this);
+        return array_map(fn ($value) => new Integration($value, $this), $integrations);
     }
 
     /**
@@ -34,13 +34,13 @@ trait ManagesIntegrations
     /**
      * Get Active Integrations
      *
-     * @return \Novu\SDK\Resources\Integration
+     * @return \Novu\SDK\Resources\Integration[]
      */
     public function getActiveIntegrations()
     {
         $integrations = $this->get("integrations/active")['data'];
 
-        return new Integration($integrations, $this);
+        return array_map(fn ($value) => new Integration($value, $this), $integrations);
     }
 
     /**

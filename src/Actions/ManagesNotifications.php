@@ -5,10 +5,11 @@ namespace Novu\SDK\Actions;
 use Novu\SDK\Resources\Notification;
 use Novu\SDK\Resources\NotificationStats;
 use Novu\SDK\Resources\NotificationGraphStats;
+use Novu\SDK\Resources\Paginated;
 
 trait ManagesNotifications
 {
-   
+
     /**
      * Get A Notification
      *
@@ -25,7 +26,7 @@ trait ManagesNotifications
      /**
      * Get All Notifications
      * @param array $queryParams
-     * @return \Novu\SDK\Resources\Notification
+     * @return Paginated<\Novu\SDK\Resources\Notification>
      */
     public function getNotifications(array $queryParams = [])
     {
@@ -37,11 +38,12 @@ trait ManagesNotifications
 
         $response = $this->get($uri);
 
-        return new Notification($response, $this);
+        $response['data'] = array_map(fn ($value) => new Notification($value, $this), $response['data']);
+        return new Paginated($response);
     }
 
      /**
-     * Get Notification Statistics 
+     * Get Notification Statistics
      *
      * @return \Novu\SDK\Resources\NotificationStats
      */
@@ -55,7 +57,7 @@ trait ManagesNotifications
     /**
      * Get Notification Graph Stats
      * @param array $queryParams
-     * @return \Novu\SDK\Resources\NotificationGraphStats
+     * @return \Novu\SDK\Resources\NotificationGraphStats[]
      */
     public function getNotificationGraphStats(array $queryParams = [])
     {
@@ -66,8 +68,8 @@ trait ManagesNotifications
         }
 
         $response = $this->get($uri)['data'];
-    
-        return new NotificationGraphStats($response, $this);
+
+        return array_map(fn ($value) => new NotificationGraphStats($value, $this), $response);
     }
 
 }

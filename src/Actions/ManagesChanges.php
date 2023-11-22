@@ -3,44 +3,52 @@
 namespace Novu\SDK\Actions;
 
 use Novu\SDK\Resources\Change;
+use Novu\SDK\Resources\Paginated;
 
 trait ManagesChanges
 {
-   
+
     /**
      * Get Changes
      *
-     * @return \Novu\SDK\Resources\Change
+     * @return Paginated<\Novu\SDK\Resources\Change>
      */
-    public function getChanges()
+    public function getChanges(array $queryParams)
     {
-        $response = $this->get("changes");
+        $uri = "changes";
 
-        return new Change($response, $this);
+        if(! empty($queryParams)) {
+            $uri .= '?' . http_build_query($queryParams);
+        }
+
+        $response = $this->get($uri);
+
+        $response['data'] = array_map(fn ($value) => new Change($value, $this), $response['data']);
+        return new Paginated($response);
     }
 
     /**
      * Get Changes Count
      *
-     * @return \Novu\SDK\Resources\Change
+     * @return int
      */
     public function getChangesCount()
     {
         $response = $this->get("changes/count")['data'];
 
-        return new Change($response, $this);
+        return $response;
     }
 
     /**
      * Apply Bulk Changes
      *
-     * @return \Novu\SDK\Resources\Change
+     * @return \Novu\SDK\Resources\Change[]
      */
     public function applyBulkChanges(array $data)
     {
         $response = $this->post("changes/bulk/apply", $data)['data'];
 
-        return new Change($response, $this);
+        return array_map(fn ($value) => new Change($value, $this), $response);
     }
 
     /**

@@ -6,7 +6,7 @@ use Novu\SDK\Resources\Trigger;
 
 trait ManagesTriggers
 {
-   
+
     /**
      * Trigger event
      *
@@ -24,13 +24,13 @@ trait ManagesTriggers
      * Bulk Trigger event
      *
      * @param array $data
-     * @return \Novu\SDK\Resources\Trigger
+     * @return \Novu\SDK\Resources\Trigger[]
      */
     public function bulkTriggerEvent(array $data)
     {
         $response = $this->post("events/trigger/bulk", ['events' => $data])['data'];
 
-        return new Trigger($response, $this);
+        return array_map(fn ($value) => new Trigger($value, $this), $response);
     }
 
     /**

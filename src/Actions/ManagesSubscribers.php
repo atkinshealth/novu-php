@@ -2,7 +2,12 @@
 
 namespace Novu\SDK\Actions;
 
+use Novu\SDK\Resources\FeedNotification;
+use Novu\SDK\Resources\Notification;
+use Novu\SDK\Resources\Paginated;
 use Novu\SDK\Resources\Subscriber;
+use Novu\SDK\Resources\SubscriptionPreference;
+use Novu\SDK\Resources\Workflow;
 
 trait ManagesSubscribers
 {
@@ -102,13 +107,13 @@ trait ManagesSubscribers
      * Fetch a subscriber preferences
      *
      * @param  string  $subscriberId
-     * @return \Novu\SDK\Resources\Subscriber
+     * @return SubscriptionPreference[]
      */
     public function getSubscriberPreferences($subscriberId)
     {
         $preferences = $this->get("subscribers/{$subscriberId}/preferences")['data'];
 
-        return new Subscriber($preferences, $this);
+        return array_map(fn ($preference) => new SubscriptionPreference($preference, $this), $preferences);
     }
 
     /**
@@ -117,13 +122,13 @@ trait ManagesSubscribers
      * @param  string $subscriberId
      * @param  string $templateId
      * @param  array  $data
-     * @return \Novu\SDK\Resources\Subscriber
+     * @return \Novu\SDK\Resources\SubscriptionPreference
      */
     public function updateSubscriberPreference($subscriberId, $templateId, array $data)
     {
-        $subscriber = $this->patch("subscribers/{$subscriberId}/preferences/{$templateId}", $data)['data'];
+        $result = $this->patch("subscribers/{$subscriberId}/preferences/{$templateId}", $data)['data'];
 
-        return new Subscriber($subscriber, $this);
+        return new SubscriptionPreference($result, $this);
     }
 
     /**
@@ -135,7 +140,7 @@ trait ManagesSubscribers
      */
     public function updateSubscriberOnlineStatus($subscriberId, $isOnlineStatus)
     {
-        $subscriber = $this->patch("subscribers/{$subscriberId}/online-status", 
+        $subscriber = $this->patch("subscribers/{$subscriberId}/online-status",
             [
                 'json' => [
                     'isOnline' => $isOnlineStatus
@@ -150,26 +155,27 @@ trait ManagesSubscribers
      * Get a notification feed for a particular subscriber [Come back to this for pagination]
      *
      * @param  string  $subscriberId
-     * @return \Novu\SDK\Resources\Subscriber
+     * @return Paginated<\Novu\SDK\Resources\FeedNotification>
      */
     public function getNotificationFeedForSubscriber($subscriberId)
     {
-        $feed = $this->get("subscribers/{$subscriberId}/notifications/feed");
+        $response = $this->get("subscribers/{$subscriberId}/notifications/feed");
 
-        return new Subscriber($feed, $this);
+        $response['data'] = array_map(fn ($value) => new FeedNotification($value, $this), $response['data']);
+        return new Paginated($response);
     }
 
     /**
      * Get the unseen notification count for subscribers feed
      *
      * @param  string  $subscriberId
-     * @return \Novu\SDK\Resources\Subscriber
+     * @return int
      */
     public function getUnseenNotificationCountForSubscriber($subscriberId)
     {
         $feed = $this->get("subscribers/{$subscriberId}/notifications/unseen")['data'];
 
-        return new Subscriber($feed, $this);
+        return $feed;
     }
 
     /**
@@ -179,13 +185,14 @@ trait ManagesSubscribers
      * @param  string  $messageId
      * @param  array $data
      * @param  bool  $wait
-     * @return \Novu\SDK\Resources\Subscriber
+     * @return Paginated<\Novu\SDK\Resources\FeedNotification>
      */
     public function markSubscriberFeedMessageAsSeen($subscriberId, $messageId, array $data, $wait = true)
     {
-        $subscriber = $this->post("subscribers/{$subscriberId}/messages/{$messageId}/seen", $data)['data'];
+        $response = $this->post("subscribers/{$subscriberId}/messages/{$messageId}/seen", $data)['data'];
 
-        return new Subscriber($subscriber, $this);
+        $response['data'] = array_map(fn ($value) => new FeedNotification($value, $this), $response['data']);
+        return new Paginated($response);
     }
 
     /**
@@ -196,12 +203,13 @@ trait ManagesSubscribers
      * @param  string  $type
      * @param  array   $data
      * @param  bool    $wait
-     * @return \Novu\SDK\Resources\Subscriber
+     * @return Paginated<\Novu\SDK\Resources\FeedNotification>
      */
     public function markSubscriberMessageActionAsSeen($subscriberId, $messageId, $type, array $data, $wait = true)
     {
-        $subscriber = $this->post("subscribers/{$subscriberId}/messages/{$messageId}/actions/{$type}", $data)['data'];
+        $response = $this->post("subscribers/{$subscriberId}/messages/{$messageId}/actions/{$type}", $data)['data'];
 
-        return new Subscriber($subscriber, $this);
+        $response['data'] = array_map(fn ($value) => new FeedNotification($value, $this), $response['data']);
+        return new Paginated($response);
     }
 }

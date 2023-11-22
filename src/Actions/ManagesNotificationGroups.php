@@ -6,17 +6,17 @@ use Novu\SDK\Resources\NotificationGroup;
 
 trait ManagesNotificationGroups
 {
-   
+
     /**
      * Get Notification Groups
      *
-     * @return \Novu\SDK\Resources\NotificationGroup
+     * @return \Novu\SDK\Resources\NotificationGroup[]
      */
     public function getNotificationGroups()
     {
         $response = $this->get("notification-groups")['data'];
 
-        return new NotificationGroup($response, $this);
+        return array_map(fn ($group) => new NotificationGroup($group, $this), $response);
     }
 
     /**

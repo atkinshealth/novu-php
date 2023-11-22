@@ -25,9 +25,17 @@ trait ManagesTopics
      * @param  string $topicId
      * @return \Novu\SDK\Resources\Topic
      */
-    public function getTopics()
+    public function getTopics(array $queryParams = [])
     {
-        return $this->get("topics")['data'];
+        $uri = 'topics';
+
+        if (!empty($queryParams)) {
+            $uri .= '?' . http_build_query($queryParams);
+        }
+
+        $response = $this->get($uri);
+        $response['data'] = array_map(fn ($value) => new Topic($value, $this), $response['data']);
+        return $response;
     }
 
     /**
@@ -71,11 +79,13 @@ trait ManagesTopics
      * Rename Topic
      *
      * @param  string $topicKey
-     * @param  string $topicName 
-     * @return array
+     * @param  string $topicName
+     * @return \Novu\SDK\Resources\Topic
      */
     public function renameTopic($topicKey, $topicName)
     {
-        return $this->patch("topics/{$topicKey}", ['name' => $topicName])['data'];
+        $topic = $this->patch("topics/{$topicKey}", ['name' => $topicName])['data'];
+
+        return new Topic($topic, $this);
     }
 }

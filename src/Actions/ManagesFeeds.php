@@ -10,13 +10,13 @@ trait ManagesFeeds
     /**
      * Get Feeds
      *
-     * @return \Novu\SDK\Resources\Feed
+     * @return \Novu\SDK\Resources\Feed[]
      */
     public function getFeeds()
     {
         $response = $this->get("feeds")['data'];
 
-        return new Feed($response, $this);
+        return array_map(fn ($feed) => new Feed($feed, $this), $response);
     }
 
     /**

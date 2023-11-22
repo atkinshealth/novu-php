@@ -3,6 +3,7 @@
 namespace Novu\SDK\Actions;
 
 use Novu\SDK\Resources\Message;
+use Novu\SDK\Resources\Paginated;
 
 trait ManagesMessages
 {
@@ -11,13 +12,13 @@ trait ManagesMessages
      * Get Messages
      *
      * @param array $queryParams
-     * @return mixed
+     * @return Paginated<Message>
      */
     public function getMessages(array $queryParams = [])
     {
         $response = $this->get("messages", $queryParams);
-        $response['data'] = array_map(function($value){ new Message($value, $this); }, $response['data']);
-        return $response;
+        $response['data'] = array_map(fn ($value) => new Message($value, $this), $response['data']);
+        return new Paginated($response);
     }
 
     /**
