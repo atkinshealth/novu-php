@@ -40,6 +40,9 @@ class NotificationGroup extends Resource
      */
     public $environmentId;
 
+    public $createdAt;
+    public $updatedAt;
+
 
     /**
      * Return the array form of NotificationGroup object.
