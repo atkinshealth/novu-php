@@ -95,6 +95,13 @@ class Subscriber extends Resource
      */
     public $updatedAt;
 
+    /**
+     * The custom user-defined data
+     *
+     * @var array
+     */
+    public $data;
+
     public function delete()
     {
         $this->novu->deleteSubscriber($this->subscriberId);
