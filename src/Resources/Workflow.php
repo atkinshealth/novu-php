@@ -109,6 +109,11 @@ class Workflow extends Resource
      */
     public $workflowIntegrationStatus;
 
+    /**
+     * @var array
+     */
+    public $data;
+
 
     public function toArray(): array
     {
