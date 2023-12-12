@@ -2,6 +2,7 @@
 
 namespace Novu\SDK\Resources;
 
+#[\AllowDynamicProperties]
 class Change extends Resource
 {
     /**
@@ -86,7 +87,7 @@ class Change extends Resource
         unset($publicProperties['attributes']);
         unset($publicProperties['novu']);
 
-        return array_filter($publicProperties, function ($value) { 
+        return array_filter($publicProperties, function ($value) {
             return null !== $value;
         });
     }
