@@ -93,6 +93,10 @@ trait MakeHttpRequests
             $payload = array_merge($payload, ['query' => $query]);
         }
 
+        if (!str_contains($uri, "?")) {
+            $uri = (new \GuzzleHttp\Psr7\Uri(''))->withPath($uri);
+        }
+
         $response = $this->client->request($verb, $uri, $payload);
 
         $statusCode = $response->getStatusCode();
