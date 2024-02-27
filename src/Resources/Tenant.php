@@ -54,6 +54,13 @@ class Tenant extends Resource
     public $environmentId;
 
     /**
+     * The organization Id
+     * 
+     * @var string
+     */
+    public $organizationId;
+
+    /**
      * Return the array form of Tenant object.
      */
     public function toArray(): array
