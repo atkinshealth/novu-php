@@ -64,7 +64,7 @@ class Novu
      * @param  \GuzzleHttp\Client|null  $guzzle
      * @return void
      */
-    public function __construct($config = [], HttpClient $client = null)
+    public function __construct($config = [], ?HttpClient $client = null)
     {
         // Default values
         $defaultBaseUri = 'https://api.novu.co/v1/';
